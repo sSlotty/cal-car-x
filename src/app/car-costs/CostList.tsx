@@ -1,10 +1,14 @@
-import { Button, Form, Input, InputNumber, Space } from 'antd';
+import Button from 'antd/lib/button';
+import Form from 'antd/lib/form';
+import Input from 'antd/lib/input';
+import InputNumber from 'antd/lib/input-number';
+import Space from 'antd/lib/space';
+import Popover from 'antd/lib/popover';
 import {
   PlusOutlined,
   MinusCircleOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons';
-import { Popover } from 'antd';
 import { languageData } from '../utils/LanguageUtils';
 
 interface CostListProps {
@@ -61,6 +65,7 @@ const CostList: React.FC<CostListProps> = ({
                 <Form.Item
                   {...restField}
                   name={[name, 'cost']}
+                  initialValue={0}
                   rules={[
                     {
                       required: true,
@@ -68,7 +73,12 @@ const CostList: React.FC<CostListProps> = ({
                     },
                   ]}
                 >
-                  <InputNumber value={0} placeholder="Cost" min={0} />
+                  <InputNumber
+                    value={0}
+                    placeholder="Cost"
+                    min={0}
+                    inputMode="decimal" // Ensure the decimal keypad shows on mobile
+                  />
                 </Form.Item>
 
                 <MinusCircleOutlined onClick={() => remove(name)} />

@@ -1,4 +1,6 @@
-import { Form, InputNumber, Card } from 'antd';
+import Form from 'antd/lib/form';
+import InputNumber from 'antd/lib/input-number';
+import Card from 'antd/lib/card';
 import { languageData } from '../utils/LanguageUtils';
 import { useCallback } from 'react';
 import React from 'react';
