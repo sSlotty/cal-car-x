@@ -18,4 +18,4 @@ const Home = () => {
   );
 };
 
-export default React.memo(Home); // Memoize Home component
+export default React.memo(Home);

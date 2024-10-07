@@ -1,6 +1,6 @@
 export interface Cost {
     item: string;
-    cost: number | null; // Costs can be null now
+    cost: number | null;
 }
 
 export interface CarData {
@@ -9,12 +9,11 @@ export interface CarData {
     downPaymentPercentage: number;
     loanInterestRate: number;
     loanTermYears: number;
-    monthlyCosts?: (Cost | null)[]; // Array of costs or null values
+    monthlyCosts?: (Cost | null)[]; 
     yearlyCosts?: (Cost | null)[];
     additionalCost?: (Cost | null)[];
 }
 
-// Define the return type
 export interface CarCostSummary {
     loanAmount: number;
     monthlyInstallment: string;
@@ -24,7 +23,6 @@ export interface CarCostSummary {
 }
 
 export function calculateCarCosts(carData: CarData): CarCostSummary {
-    // Calculate loan amount and interest
     const loanAmount = carData.price * ((100 - carData.downPaymentPercentage) / 100);
     const totalInterest = loanAmount * (carData.loanInterestRate / 100) * carData.loanTermYears;
     const totalAmount = loanAmount + totalInterest;
@@ -34,22 +32,20 @@ export function calculateCarCosts(carData: CarData): CarCostSummary {
 
     let totalMonthlyCost = validMonthlyInstallment;
 
-    // Add monthly costs (handling null or undefined values)
     if (carData.monthlyCosts) {
         for (const cost of carData.monthlyCosts) {
             if (cost && cost.cost !== null) {
-                totalMonthlyCost += cost.cost; // Use 0 if the value is null
+                totalMonthlyCost += cost.cost; 
             }
         }
     }
 
     let totalYearlyCost = validMonthlyInstallment * 12;
 
-    // Add yearly costs (handling null or undefined values)
     if (carData.yearlyCosts) {
         for (const cost of carData.yearlyCosts) {
             if (cost && cost.cost !== null) {
-                totalYearlyCost += cost.cost; // Use 0 if the value is null
+                totalYearlyCost += cost.cost; 
             }
         }
     }

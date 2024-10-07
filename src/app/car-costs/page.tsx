@@ -98,7 +98,7 @@ const CarCostsPage = () => {
           <h1
             className="text-xl font-bold"
             style={{ margin: 0 }}
-          >{`Develope by Thanathio.Dev`}</h1>
+          >{`Develope by Thanathip.Dev`}</h1>
         </div>
 
         <Select
