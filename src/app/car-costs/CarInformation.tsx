@@ -1,5 +1,7 @@
 import { Form, InputNumber, Card } from 'antd';
 import { languageData } from '../utils/LanguageUtils';
+import { useCallback } from 'react';
+import React from 'react';
 
 interface CarInformationProps {
   price: number;
@@ -28,6 +30,27 @@ const CarInformation: React.FC<CarInformationProps> = ({
   setLoanTermYears,
   language,
 }) => {
+  const handlePriceChange = useCallback(
+    (value: number | null) => setPrice(value ?? 0),
+    [setPrice]
+  );
+  const handleDiscountChange = useCallback(
+    (value: number | null) => setDiscount(value ?? 0),
+    [setDiscount]
+  );
+  const handleDownPaymentChange = useCallback(
+    (value: number | null) => setDownPaymentPercentage(value ?? 0),
+    [setDownPaymentPercentage]
+  );
+  const handleInterestRateChange = useCallback(
+    (value: number | null) => setLoanInterestRate(value ?? 0),
+    [setLoanInterestRate]
+  );
+  const handleLoanTermChange = useCallback(
+    (value: number | null) => setLoanTermYears(value ?? 0),
+    [setLoanTermYears]
+  );
+
   return (
     <Card
       title={languageData[language].carInformation}
@@ -37,22 +60,24 @@ const CarInformation: React.FC<CarInformationProps> = ({
       <Form.Item label={languageData[language].price} name="price">
         <InputNumber
           value={price}
-          onChange={(value) => setPrice(value !== null ? value : 0)}
+          onChange={handlePriceChange}
           formatter={(value) =>
             `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
           }
           className="w-full"
+          inputMode="decimal" // Ensure the decimal keypad shows on mobile
         />
       </Form.Item>
 
       <Form.Item label={languageData[language].discount} name="discount">
         <InputNumber
           value={discount}
-          onChange={(value) => setDiscount(value !== null ? value : 0)}
+          onChange={handleDiscountChange}
           formatter={(value) =>
             `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
           }
           className="w-full"
+          inputMode="decimal" // Ensure the decimal keypad shows on mobile
         />
       </Form.Item>
 
@@ -64,12 +89,11 @@ const CarInformation: React.FC<CarInformationProps> = ({
           value={downPaymentPercentage}
           min={0}
           max={100}
-          onChange={(value) =>
-            setDownPaymentPercentage(value !== null ? value : 0)
-          }
+          onChange={handleDownPaymentChange}
           formatter={(value) => `${value}%`}
           parser={(value) => parseFloat(value?.replace('%', '') || '0')}
           className="w-full"
+          inputMode="numeric" // Ensure the numeric keypad shows on mobile
         />
       </Form.Item>
 
@@ -81,10 +105,11 @@ const CarInformation: React.FC<CarInformationProps> = ({
           value={loanInterestRate}
           min={0}
           max={100}
-          onChange={(value) => setLoanInterestRate(value !== null ? value : 0)}
+          onChange={handleInterestRateChange}
           formatter={(value) => `${value}%`}
           parser={(value) => parseFloat(value?.replace('%', '') || '0')}
           className="w-full"
+          inputMode="numeric" // Ensure the numeric keypad shows on mobile
         />
       </Form.Item>
 
@@ -93,12 +118,13 @@ const CarInformation: React.FC<CarInformationProps> = ({
           value={loanTermYears}
           min={0}
           max={7}
-          onChange={(value) => setLoanTermYears(value !== null ? value : 0)}
+          onChange={handleLoanTermChange}
           className="w-full"
+          inputMode="numeric" // Ensure the numeric keypad shows on mobile
         />
       </Form.Item>
     </Card>
   );
 };
 
-export default CarInformation;
+export default React.memo(CarInformation);

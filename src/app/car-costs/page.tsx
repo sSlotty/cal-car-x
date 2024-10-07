@@ -17,9 +17,19 @@ import { languageData } from '../utils/LanguageUtils';
 
 const { Option } = Select;
 
+// Initial language determination, checks if localStorage is available
+const getInitialLanguage = (): 'en' | 'th' => {
+  if (typeof window !== 'undefined') {
+    const savedLanguage = localStorage.getItem('language');
+    return savedLanguage === 'en' || savedLanguage === 'th'
+      ? savedLanguage
+      : 'en';
+  }
+  return 'en'; // Default to 'en' during SSR
+};
+
 const CarCostsPage = () => {
   const [form] = Form.useForm();
-  const [language, setLanguage] = useState<'en' | 'th'>('en'); // Set default language
 
   const [price, setPrice] = useState<number>(0);
   const [discount, setDiscount] = useState<number>(0);
@@ -31,6 +41,53 @@ const CarCostsPage = () => {
   const [additionalCost, setAdditionalCost] = useState<Cost[]>([]);
 
   const [carCosts, setCarCosts] = useState<CarCostSummary | null>(null);
+  const [language, setLanguage] = useState<'en' | 'th'>('en');
+
+  useEffect(() => {
+    const savedLanguage = getInitialLanguage();
+    setLanguage(savedLanguage);
+
+    const carInfomation: CarData = {
+      price,
+      discount,
+      downPaymentPercentage,
+      loanInterestRate,
+      loanTermYears,
+      monthlyCosts: monthlyCosts.filter(
+        (cost) =>
+          cost &&
+          typeof cost.cost === 'number' &&
+          cost.item !== ' ' &&
+          cost.item != null
+      ),
+      yearlyCosts: yearlyCosts.filter(
+        (cost) =>
+          cost &&
+          typeof cost.cost === 'number' &&
+          cost.item !== ' ' &&
+          cost.item != null
+      ),
+      additionalCost: additionalCost.filter(
+        (cost) =>
+          cost &&
+          typeof cost.cost === 'number' &&
+          cost.item !== ' ' &&
+          cost.item != null
+      ),
+    };
+
+    const updatedCarCosts = calculateCarCosts(carInfomation);
+    setCarCosts(updatedCarCosts);
+  }, [
+    price,
+    discount,
+    downPaymentPercentage,
+    loanInterestRate,
+    loanTermYears,
+    monthlyCosts,
+    yearlyCosts,
+    additionalCost,
+  ]);
 
   useEffect(() => {
     const carInfomation: CarData = {
@@ -53,13 +110,13 @@ const CarCostsPage = () => {
           cost.item !== ' ' &&
           cost.item != null
       ),
-      // additionalCost: additionalCost != null ? additionalCost.filter(
-      //   (cost) =>
-      //     cost &&
-      //     typeof cost.cost === 'number' &&
-      //     cost.item !== ' ' &&
-      //     cost.item != null
-      // ),
+      additionalCost: additionalCost.filter(
+        (cost) =>
+          cost &&
+          typeof cost.cost === 'number' &&
+          cost.item !== ' ' &&
+          cost.item != null
+      ),
     };
 
     const updatedCarCosts = calculateCarCosts(carInfomation);
@@ -75,6 +132,13 @@ const CarCostsPage = () => {
     additionalCost,
   ]);
 
+  const handleLanguageChange = (value: 'en' | 'th') => {
+    setLanguage(value);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('language', value);
+    }
+  };
+
   return (
     <div className="container mx-auto p-6">
       {/* Language Switcher */}
@@ -84,6 +148,7 @@ const CarCostsPage = () => {
           justifyContent: 'space-between',
           alignItems: 'center',
           marginBottom: '16px',
+          color: 'white',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -98,12 +163,12 @@ const CarCostsPage = () => {
           <h1
             className="text-xl font-bold"
             style={{ margin: 0 }}
-          >{`Develope by Thanathip.Dev`}</h1>
+          >{`Developed by Thanathip.Dev`}</h1>
         </div>
 
         <Select
-          defaultValue={language}
-          onChange={(value) => setLanguage(value)}
+          value={language} // Fix for value instead of defaultValue
+          onChange={(value) => handleLanguageChange(value)}
           style={{ width: 'auto' }}
         >
           <Option value="en">🇺🇸 English</Option>
@@ -175,17 +240,15 @@ const CarCostsPage = () => {
                   language={language}
                   name="yearlyCosts"
                 />
-                {/* <CostList
+                <CostList
                   title={languageData[language].additionalCosts}
                   titleDescription={
                     languageData[language].additionalCostsInfoTitle
                   }
                   description={languageData[language].additionalCostsDesc}
                   language={language}
-                  costs={additionalCost}
-                  setCosts={setAdditionalCost}
                   name="additionalCost"
-                /> */}
+                />
               </div>
             </Card>
           </Col>
