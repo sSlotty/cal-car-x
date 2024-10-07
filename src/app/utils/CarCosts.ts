@@ -9,7 +9,7 @@ export interface CarData {
     downPaymentPercentage: number;
     loanInterestRate: number;
     loanTermYears: number;
-    monthlyCosts?: (Cost | null)[]; 
+    monthlyCosts?: (Cost | null)[];
     yearlyCosts?: (Cost | null)[];
     additionalCost?: (Cost | null)[];
 }
@@ -35,7 +35,7 @@ export function calculateCarCosts(carData: CarData): CarCostSummary {
     if (carData.monthlyCosts) {
         for (const cost of carData.monthlyCosts) {
             if (cost && cost.cost !== null) {
-                totalMonthlyCost += cost.cost; 
+                totalMonthlyCost += cost.cost;
             }
         }
     }
@@ -45,21 +45,21 @@ export function calculateCarCosts(carData: CarData): CarCostSummary {
     if (carData.yearlyCosts) {
         for (const cost of carData.yearlyCosts) {
             if (cost && cost.cost !== null) {
-                totalYearlyCost += cost.cost; 
+                totalYearlyCost += cost.cost;
             }
         }
     }
 
-    const totalSumYearsCost = validMonthlyInstallment * carData.loanTermYears * 12;
+    let totalSumYearsCost = validMonthlyInstallment * carData.loanTermYears * 12;
 
     // Handle additional costs if needed (you can uncomment and adapt the logic based on how you want it calculated)
-    // if (carData.additionalCost) {
-    //     for (const cost of carData.additionalCost) {
-    //         if (cost && cost.cost !== null) {
-    //             totalSumYearsCost += cost.cost;
-    //         }
-    //     }
-    // }
+    if (carData.additionalCost) {
+        for (const cost of carData.additionalCost) {
+            if (cost && cost.cost !== null) {
+                totalSumYearsCost += cost.cost;
+            }
+        }
+    }
 
     return {
         loanAmount: isNaN(loanAmount) ? 0 : loanAmount,

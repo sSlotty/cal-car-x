@@ -118,7 +118,7 @@ const CarCostsPage = () => {
           color: 'white',
         }}
       >
-        <div className="developer-info">
+        <div className="developer-info flex">
           <a
             href="https://github.com/sSlotty"
             target="_blank"
@@ -126,7 +126,7 @@ const CarCostsPage = () => {
           >
             <GithubOutlined style={{ fontSize: '24px' }} />
           </a>
-          <h1 className="text-xl font-bold">Developed by Thanathip.Dev</h1>
+          <h1 className="text-md font-bold ml-1">Developed by Thanathip.Dev</h1>
         </div>
 
         <Select
