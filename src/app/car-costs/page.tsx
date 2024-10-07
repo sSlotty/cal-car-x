@@ -1,19 +1,26 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Form, Row, Col, Card, Select } from 'antd';
-import CarInformation from './CarInformation';
-import CostList from './CostList';
-import SummaryCalculation from './SummaryCalculation';
+import dynamic from 'next/dynamic';
+import { GithubOutlined } from '@ant-design/icons';
 import {
   calculateCarCosts,
   CarCostSummary,
   CarData,
   Cost,
 } from '../utils/CarCosts';
-import React from 'react';
-import { GithubOutlined } from '@ant-design/icons';
 import { languageData } from '../utils/LanguageUtils';
+import React from 'react';
+
+// Dynamically import large components
+const CarInformation = dynamic(() => import('./CarInformation'), {
+  ssr: false,
+});
+const CostList = dynamic(() => import('./CostList'), { ssr: false });
+const SummaryCalculation = dynamic(() => import('./SummaryCalculation'), {
+  ssr: false,
+});
 
 const { Option } = Select;
 
@@ -41,13 +48,11 @@ const CarCostsPage = () => {
   const [additionalCost, setAdditionalCost] = useState<Cost[]>([]);
 
   const [carCosts, setCarCosts] = useState<CarCostSummary | null>(null);
-  const [language, setLanguage] = useState<'en' | 'th'>('en');
+  const [language, setLanguage] = useState<'en' | 'th'>(getInitialLanguage);
 
-  useEffect(() => {
-    const savedLanguage = getInitialLanguage();
-    setLanguage(savedLanguage);
-
-    const carInfomation: CarData = {
+  // Memoize car data to avoid unnecessary recomputation
+  const carInformation = useMemo<CarData>(
+    () => ({
       price,
       discount,
       downPaymentPercentage,
@@ -74,70 +79,32 @@ const CarCostsPage = () => {
           cost.item !== ' ' &&
           cost.item != null
       ),
-    };
-
-    const updatedCarCosts = calculateCarCosts(carInfomation);
-    setCarCosts(updatedCarCosts);
-  }, [
-    price,
-    discount,
-    downPaymentPercentage,
-    loanInterestRate,
-    loanTermYears,
-    monthlyCosts,
-    yearlyCosts,
-    additionalCost,
-  ]);
-
-  useEffect(() => {
-    const carInfomation: CarData = {
+    }),
+    [
       price,
       discount,
       downPaymentPercentage,
       loanInterestRate,
       loanTermYears,
-      monthlyCosts: monthlyCosts.filter(
-        (cost) =>
-          cost &&
-          typeof cost.cost === 'number' &&
-          cost.item !== ' ' &&
-          cost.item != null
-      ),
-      yearlyCosts: yearlyCosts.filter(
-        (cost) =>
-          cost &&
-          typeof cost.cost === 'number' &&
-          cost.item !== ' ' &&
-          cost.item != null
-      ),
-      additionalCost: additionalCost.filter(
-        (cost) =>
-          cost &&
-          typeof cost.cost === 'number' &&
-          cost.item !== ' ' &&
-          cost.item != null
-      ),
-    };
+      monthlyCosts,
+      yearlyCosts,
+      additionalCost,
+    ]
+  );
 
-    const updatedCarCosts = calculateCarCosts(carInfomation);
+  // Update car costs only when the carInformation changes
+  useEffect(() => {
+    const updatedCarCosts = calculateCarCosts(carInformation);
     setCarCosts(updatedCarCosts);
-  }, [
-    price,
-    discount,
-    downPaymentPercentage,
-    loanInterestRate,
-    loanTermYears,
-    monthlyCosts,
-    yearlyCosts,
-    additionalCost,
-  ]);
+  }, [carInformation]);
 
-  const handleLanguageChange = (value: 'en' | 'th') => {
+  // Handle language change and persist it in localStorage
+  const handleLanguageChange = useCallback((value: 'en' | 'th') => {
     setLanguage(value);
     if (typeof window !== 'undefined') {
       localStorage.setItem('language', value);
     }
-  };
+  }, []);
 
   return (
     <div className="container mx-auto p-6">
@@ -151,24 +118,20 @@ const CarCostsPage = () => {
           color: 'white',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div className="developer-info">
           <a
             href="https://github.com/sSlotty"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ marginRight: 10, color: 'inherit' }}
           >
             <GithubOutlined style={{ fontSize: '24px' }} />
           </a>
-          <h1
-            className="text-xl font-bold"
-            style={{ margin: 0 }}
-          >{`Developed by Thanathip.Dev`}</h1>
+          <h1 className="text-xl font-bold">Developed by Thanathip.Dev</h1>
         </div>
 
         <Select
-          value={language} // Fix for value instead of defaultValue
-          onChange={(value) => handleLanguageChange(value)}
+          value={language}
+          onChange={handleLanguageChange}
           style={{ width: 'auto' }}
         >
           <Option value="en">🇺🇸 English</Option>
