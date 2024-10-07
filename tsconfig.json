@@ -1,26 +1,41 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
+    "target": "es5", // Target ES5 to support older browsers
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ], // Include DOM and ES features
+    "allowJs": true, // Allow JS files
+    "skipLibCheck": true, // Skip type checks of declaration files
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Allow default imports from non-ES modules
+    "module": "esnext", // ESNext module syntax
+    "moduleResolution": "node", // Use Node-style module resolution
+    "resolveJsonModule": true, // Allow importing JSON files
+    "isolatedModules": true, // Enforce isolated modules
+    "jsx": "preserve", // Use "react-jsx" for React 17+ JSX runtime
+    "incremental": true, // Enable incremental compilation
+    "noEmit": true, // Don't emit JS output
+    "forceConsistentCasingInFileNames": true, // Ensure casing consistency
+    "paths": { // Custom module resolution paths
+      "@/*": [
+        "./src/*"
+      ]
+    },
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ], // Files to include
+  "exclude": [
+    "node_modules"
+  ] // Exclude node_modules
 }
