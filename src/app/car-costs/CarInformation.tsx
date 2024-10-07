@@ -64,7 +64,9 @@ const CarInformation: React.FC<CarInformationProps> = ({
           value={downPaymentPercentage}
           min={0}
           max={100}
-          onChange={(value) => setLoanInterestRate(value !== null ? value : 0)}
+          onChange={(value) =>
+            setDownPaymentPercentage(value !== null ? value : 0)
+          }
           formatter={(value) => `${value}%`}
           parser={(value) => parseFloat(value?.replace('%', '') || '0')}
           className="w-full"

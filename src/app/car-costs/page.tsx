@@ -166,8 +166,6 @@ const CarCostsPage = () => {
                   }
                   description={languageData[language].monthlyCostDesc}
                   language={language}
-                  costs={monthlyCosts}
-                  setCosts={setMonthlyCosts}
                   name="monthlyCosts"
                 />
                 <CostList
@@ -175,8 +173,6 @@ const CarCostsPage = () => {
                   titleDescription={languageData[language].yearlyCostsInfoTitle}
                   description={languageData[language].yearlyCostsDesc}
                   language={language}
-                  costs={yearlyCosts}
-                  setCosts={setYearlyCosts}
                   name="yearlyCosts"
                 />
                 {/* <CostList

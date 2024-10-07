@@ -1,10 +1,9 @@
-import { Button, Descriptions, Form, Input, InputNumber, Space } from 'antd';
+import { Button, Form, Input, InputNumber, Space } from 'antd';
 import {
   PlusOutlined,
   MinusCircleOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons';
-import { Cost } from '../utils/CarCosts';
 import { Popover } from 'antd';
 import { languageData } from '../utils/LanguageUtils';
 
@@ -12,8 +11,6 @@ interface CostListProps {
   title: string;
   titleDescription: string;
   description: string;
-  costs: Cost[];
-  setCosts: (costs: Cost[]) => void;
   name: string;
   language: 'en' | 'th';
 }
@@ -22,8 +19,6 @@ const CostList: React.FC<CostListProps> = ({
   title,
   titleDescription,
   description,
-  costs,
-  setCosts,
   name,
   language,
 }) => {
