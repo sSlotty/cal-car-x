@@ -57,7 +57,7 @@ const CarInformation: React.FC<CarInformationProps> = ({
     <Card
       title={languageData[language].carInformation}
       bordered={false}
-      className="mb-4"
+      className="mb-4 koho-font"
     >
       <Form.Item label={languageData[language].price} name="price">
         <InputNumber

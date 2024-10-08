@@ -28,7 +28,7 @@ const CostList: React.FC<CostListProps> = ({
 }) => {
   return (
     <>
-      <div>
+      <div className="koho-font">
         {title}
         <Popover content={description} title={titleDescription}>
           <InfoCircleOutlined
@@ -50,6 +50,7 @@ const CostList: React.FC<CostListProps> = ({
                 align="baseline"
               >
                 <Form.Item
+                  className="koho-font"
                   {...restField}
                   name={[name, 'item']}
                   rules={[
@@ -59,10 +60,11 @@ const CostList: React.FC<CostListProps> = ({
                     },
                   ]}
                 >
-                  <Input placeholder="Item" />
+                  <Input placeholder="Item" className="koho-font" />
                 </Form.Item>
 
                 <Form.Item
+                  className="koho-font"
                   {...restField}
                   name={[name, 'cost']}
                   initialValue={0}
@@ -74,6 +76,7 @@ const CostList: React.FC<CostListProps> = ({
                   ]}
                 >
                   <InputNumber
+                    className="koho-font"
                     value={0}
                     placeholder="Cost"
                     min={0}
@@ -85,9 +88,10 @@ const CostList: React.FC<CostListProps> = ({
               </Space>
             ))}
 
-            <Form.Item>
+            <Form.Item className="koho-font">
               <Button
                 type="dashed"
+                className="koho-font"
                 onClick={() => add()}
                 block
                 icon={<PlusOutlined />}
