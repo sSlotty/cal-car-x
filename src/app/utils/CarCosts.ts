@@ -58,12 +58,24 @@ export function calculateCarCosts(carData: CarData): CostSummary {
     const totalAllYearsCost = (monthlyInstallment * carData.loanTermYears * 12) + totalAdditionalCost;
 
     return {
-        downAmount: Math.max(downAmount, 0),
-        loanAmount: Math.max(loanAmount, 0),
-        monthlyInstallment: Math.max(monthlyInstallment, 0),
-        totalMonthlyCost: Math.max(totalMonthlyCostSum, 0),
-        totalYearlyCost: Math.max(totalYearlyCostSum, 0),
-        totalAdditionalCost: Math.max(totalAllYearsCost, 0),
+        downAmount: downAmount !== null && downAmount !== undefined && !isNaN(downAmount)
+            ? downAmount
+            : 0,
+        loanAmount: loanAmount !== null && loanAmount !== undefined && !isNaN(loanAmount)
+            ? loanAmount
+            : 0,
+        monthlyInstallment: monthlyInstallment !== null && monthlyInstallment !== undefined && !isNaN(monthlyInstallment)
+            ? monthlyInstallment
+            : 0,
+        totalMonthlyCost: totalMonthlyCostSum !== null && totalMonthlyCostSum !== undefined && !isNaN(totalMonthlyCostSum)
+            ? totalMonthlyCostSum
+            : 0,
+        totalYearlyCost: totalYearlyCostSum !== null && totalYearlyCostSum !== undefined && !isNaN(totalYearlyCostSum)
+            ? totalYearlyCostSum
+            : 0,
+        totalAdditionalCost: totalAllYearsCost !== null && totalAllYearsCost !== undefined && !isNaN(totalAllYearsCost)
+            ? totalAllYearsCost
+            : 0,
     };
 }
 
