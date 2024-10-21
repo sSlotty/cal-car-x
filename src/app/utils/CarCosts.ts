@@ -62,12 +62,24 @@ export function calculateCarCosts(carData: CarData): CostSummary {
     const totalAllYearsCost = (monthlyInstallment * loanTermYears * 12) + totalAdditionalCost;
 
     return {
-        downAmount: isNaN(downAmount) || downAmount === Infinity ? 0 : downAmount,
-        loanAmount: isNaN(loanAmount) || loanAmount === Infinity ? 0 : loanAmount,
-        monthlyInstallment: isNaN(monthlyInstallment) || monthlyInstallment === Infinity ? 0 : monthlyInstallment,
-        totalMonthlyCost: isNaN(totalMonthlyCostSum) || totalMonthlyCostSum === Infinity ? 0 : totalMonthlyCostSum,
-        totalYearlyCost: isNaN(totalYearlyCostSum) || totalYearlyCostSum === Infinity ? 0 : totalYearlyCostSum,
-        totalAdditionalCost: isNaN(totalAllYearsCost) || totalAllYearsCost === Infinity ? 0 : totalAllYearsCost,
+        downAmount: isNaN(downAmount) || downAmount === Infinity
+            ? 0.00
+            : toTwoDecimalPlaces(downAmount),
+        loanAmount: isNaN(loanAmount) || loanAmount === Infinity
+            ? 0.00
+            : toTwoDecimalPlaces(loanAmount),
+        monthlyInstallment: isNaN(monthlyInstallment) || monthlyInstallment === Infinity
+            ? 0.00
+            : toTwoDecimalPlaces(monthlyInstallment),
+        totalMonthlyCost: isNaN(totalMonthlyCostSum) || totalMonthlyCostSum === Infinity
+            ? 0.00
+            : toTwoDecimalPlaces(totalMonthlyCostSum),
+        totalYearlyCost: isNaN(totalYearlyCostSum) || totalYearlyCostSum === Infinity
+            ? 0.00
+            : toTwoDecimalPlaces(totalYearlyCostSum),
+        totalAdditionalCost: isNaN(totalAllYearsCost) || totalAllYearsCost === Infinity
+            ? 0.00
+            : toTwoDecimalPlaces(totalAllYearsCost),
     };
 }
 
@@ -85,4 +97,8 @@ function calculateExpenses(expensesInput: ExpensesInput) {
 
 function calculateCostSum(costs?: (Cost | null)[]): number {
     return costs?.reduce((acc, currentItem) => acc + (currentItem?.cost ?? 0), 0) || 0;
+}
+
+function toTwoDecimalPlaces(num: number): number {
+    return parseFloat(num.toFixed(2));
 }
