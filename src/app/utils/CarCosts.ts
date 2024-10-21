@@ -38,7 +38,7 @@ export function calculateCarCosts(carData: CarData): CostSummary {
     const loanTermYears = carData.loanTermYears || 0;
 
     // Calculate down amount (percentage of price)
-    const downAmount = price * (downPaymentPercentage / 100) - discount;
+    const downAmount = price * (downPaymentPercentage / 100);
     const loanAmount = price - downAmount
 
     const totalInterest = loanTermYears > 0 ? loanAmount * (loanInterestRate / 100) * loanTermYears : 0;
