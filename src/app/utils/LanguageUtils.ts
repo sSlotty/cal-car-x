@@ -22,6 +22,7 @@ export interface LanguageData {
     maintenance: string;
     registration: string;
     loanCalculation: string;
+    downAmount:string,
     loanAmount: string;
     monthlyInstallment: string;
     totalMonthlyCost: string;
@@ -63,6 +64,7 @@ export const languageData: Language = {
         registration: 'Registration Fees',
         // Loan Calculation Fields
         loanCalculation: 'Loan Calculation',
+        downAmount:'Down Amount',
         loanAmount: 'Loan Amount',
         monthlyInstallment: 'Monthly Installment',
         totalMonthlyCost: 'Total Monthly Cost',
@@ -97,6 +99,7 @@ export const languageData: Language = {
         registration: 'ค่าจดทะเบียน',
         // Loan Calculation Fields
         loanCalculation: 'การคำนวณเงินกู้',
+        downAmount:'จำนวนเงินดาวน์',
         loanAmount: 'จำนวนเงินกู้',
         monthlyInstallment: 'งวดรายเดือน',
         totalMonthlyCost: 'ค่าใช้จ่ายรายเดือนรวม',

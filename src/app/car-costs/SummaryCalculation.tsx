@@ -1,11 +1,11 @@
 import { Card, Col, Row } from 'antd';
 import { languageData } from '../utils/LanguageUtils';
-import { CarCostSummary } from '../utils/CarCosts';
+import { CostSummary } from '../utils/CarCosts';
 import { useMemo } from 'react';
 import React from 'react';
 
 interface SummaryCalculationProps {
-  carCosts: CarCostSummary | null;
+  carCosts: CostSummary | null;
   language: 'en' | 'th';
 }
 
@@ -13,46 +13,44 @@ const SummaryCalculation: React.FC<SummaryCalculationProps> = ({
   carCosts,
   language,
 }) => {
+  // Helper function to render each cost row
+  const renderCostRow = (
+    label: string,
+    value: number | string,
+    suffix: string = 'THB'
+  ) => (
+    <div className="flex justify-between mt-2">
+      <strong>{label}:</strong>
+      <span>
+        {value} {suffix}
+      </span>
+    </div>
+  );
+
   const summaryContent = useMemo(
     () => (
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={24} md={24}>
-          <div
-            className="backdrop-blur-xl backdrop-brightness-125 rounded-2xl p-5 text-gray-800 shadow-xl border"
-            style={{
-              background:
-                'linear-gradient(90deg, rgba(238,174,202,0.3) 0%, rgba(148,155,233,0.3) 100%)',
-              height: '130px',
-            }}
-          >
-            <div className="flex justify-between">
-              <strong>{languageData[language].loanAmount}:</strong>
-              <span>{carCosts?.loanAmount.toLocaleString()} THB</span>
-            </div>
-            <div className="flex justify-between">
-              <strong>{languageData[language].monthlyInstallment}:</strong>
-              <span>
-                {parseFloat(
-                  carCosts?.monthlyInstallment ?? '0'
-                ).toLocaleString()}{' '}
-                THB
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <strong>{languageData[language].totalMonthlyCost}:</strong>
-              <span>
-                {parseFloat(carCosts?.totalMonthlyCost ?? '0').toLocaleString()}{' '}
-                THB
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <strong>{languageData[language].totalYearlyCost}:</strong>
-              <span>
-                {parseFloat(carCosts?.totalYearlyCost ?? '0').toLocaleString()}{' '}
-                THB
-              </span>
-            </div>
-          </div>
+          {renderCostRow(
+            languageData[language].downAmount,
+            carCosts?.downAmount?.toLocaleString() ?? '0'
+          )}
+          {renderCostRow(
+            languageData[language].loanAmount,
+            carCosts?.loanAmount?.toLocaleString() ?? '0'
+          )}
+          {renderCostRow(
+            languageData[language].monthlyInstallment,
+            parseFloat(carCosts?.monthlyInstallment ?? '0').toLocaleString()
+          )}
+          {renderCostRow(
+            languageData[language].totalMonthlyCost,
+            parseFloat(carCosts?.totalMonthlyCost ?? '0').toLocaleString()
+          )}
+          {renderCostRow(
+            languageData[language].totalYearlyCost,
+            parseFloat(carCosts?.totalYearlyCost ?? '0').toLocaleString()
+          )}
         </Col>
       </Row>
     ),

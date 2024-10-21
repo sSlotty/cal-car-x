@@ -14,58 +14,71 @@ export interface CarData {
     additionalCost?: (Cost | null)[];
 }
 
-export interface CarCostSummary {
+export interface CostSummary {
+    downAmount: number;
     loanAmount: number;
     monthlyInstallment: string;
     totalMonthlyCost: string;
     totalYearlyCost: string;
-    totalAllYearsCost: string;
+    totalAdditionalCost: string;
 }
 
-export function calculateCarCosts(carData: CarData): CarCostSummary {
-    const loanAmount = carData.price * ((100 - carData.downPaymentPercentage) / 100);
+interface ExpensesInput {
+    monthlyCosts?: (Cost | null)[];
+    yearlyCosts?: (Cost | null)[];
+    additionalCosts?: (Cost | null)[];
+}
+
+export function calculateCarCosts(carData: CarData): CostSummary {
+    // Calculate down amount (percentage of price) and subtract discount
+    const downAmount = (carData.price * (carData.downPaymentPercentage / 100)) - carData.discount;
+
+    // Calculate loan amount (remaining amount after down payment)
+    const loanAmount = carData.price - downAmount;
+
+    // Calculate total interest and monthly installment
     const totalInterest = loanAmount * (carData.loanInterestRate / 100) * carData.loanTermYears;
-    const totalAmount = loanAmount + totalInterest;
-    const monthlyInstallment = totalAmount / (carData.loanTermYears * 12);
+    const totalLoanAmount = loanAmount + totalInterest;
+    const monthlyInstallment = totalLoanAmount / (carData.loanTermYears * 12);
 
-    const validMonthlyInstallment = isNaN(monthlyInstallment) ? 0 : monthlyInstallment;
+    // Calculate expenses for monthly, yearly, and additional costs
+    const { totalMonthlyCost, totalYearlyCost, totalAdditionalCost } = calculateExpenses({
+        monthlyCosts: carData.monthlyCosts,
+        yearlyCosts: carData.yearlyCosts,
+        additionalCosts: carData.additionalCost,
+    });
 
-    let totalMonthlyCost = validMonthlyInstallment;
+    // Total monthly cost (installment + monthly costs)
+    const totalMonthlyCostSum = monthlyInstallment + totalMonthlyCost;
 
-    if (carData.monthlyCosts) {
-        for (const cost of carData.monthlyCosts) {
-            if (cost && cost.cost !== null) {
-                totalMonthlyCost += cost.cost;
-            }
-        }
-    }
+    // Total yearly cost (monthly * 12 + yearly costs)
+    const totalYearlyCostSum = (monthlyInstallment * 12) + totalYearlyCost + (totalMonthlyCost * 12);
 
-    let totalYearlyCost = validMonthlyInstallment * 12;
-
-    if (carData.yearlyCosts) {
-        for (const cost of carData.yearlyCosts) {
-            if (cost && cost.cost !== null) {
-                totalYearlyCost += cost.cost;
-            }
-        }
-    }
-
-    let totalSumYearsCost = validMonthlyInstallment * carData.loanTermYears * 12;
-
-    // Handle additional costs if needed (you can uncomment and adapt the logic based on how you want it calculated)
-    if (carData.additionalCost) {
-        for (const cost of carData.additionalCost) {
-            if (cost && cost.cost !== null) {
-                totalSumYearsCost += cost.cost;
-            }
-        }
-    }
+    // Total cost over all the years (monthly * loan years + additional costs)
+    const totalAllYearsCost = (monthlyInstallment * carData.loanTermYears * 12) + totalAdditionalCost;
 
     return {
-        loanAmount: isNaN(loanAmount) ? 0 : loanAmount,
-        monthlyInstallment: validMonthlyInstallment.toFixed(2),
-        totalMonthlyCost: isNaN(totalMonthlyCost) ? '0.00' : totalMonthlyCost.toFixed(2),
-        totalYearlyCost: isNaN(totalYearlyCost) ? '0.00' : totalYearlyCost.toFixed(2),
-        totalAllYearsCost: isNaN(totalSumYearsCost) ? '0.00' : totalSumYearsCost.toFixed(2),
+        downAmount: Math.max(downAmount, 0),
+        loanAmount: Math.max(loanAmount, 0),
+        monthlyInstallment: monthlyInstallment.toFixed(2),
+        totalMonthlyCost: totalMonthlyCostSum.toFixed(2),
+        totalYearlyCost: totalYearlyCostSum.toFixed(2),
+        totalAdditionalCost: totalAllYearsCost.toFixed(2),
     };
+}
+
+function calculateExpenses(expensesInput: ExpensesInput) {
+    const totalMonthlyCost = calculateCostSum(expensesInput.monthlyCosts);
+    const totalYearlyCost = calculateCostSum(expensesInput.yearlyCosts);
+    const totalAdditionalCost = calculateCostSum(expensesInput.additionalCosts);
+
+    return {
+        totalMonthlyCost,
+        totalYearlyCost,
+        totalAdditionalCost,
+    };
+}
+
+function calculateCostSum(costs?: (Cost | null)[]): number {
+    return costs?.reduce((acc, currentItem) => acc + (currentItem?.cost ?? 0), 0) || 0;
 }

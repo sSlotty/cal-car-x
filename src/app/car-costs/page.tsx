@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import { GithubOutlined } from '@ant-design/icons';
 import {
   calculateCarCosts,
-  CarCostSummary,
+  CostSummary,
   CarData,
   Cost,
 } from '../utils/CarCosts';
@@ -47,7 +47,7 @@ const CarCostsPage = () => {
   const [yearlyCosts, setYearlyCosts] = useState<Cost[]>([]);
   const [additionalCost, setAdditionalCost] = useState<Cost[]>([]);
 
-  const [carCosts, setCarCosts] = useState<CarCostSummary | null>(null);
+  const [carCosts, setCarCosts] = useState<CostSummary | null>(null);
   const [language, setLanguage] = useState<'en' | 'th'>(getInitialLanguage);
 
   // Memoize car data to avoid unnecessary recomputation

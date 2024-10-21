@@ -46,7 +46,7 @@ const CostList: React.FC<CostListProps> = ({
             {fields.map(({ key, name, ...restField }) => (
               <Space
                 key={key}
-                style={{ display: 'flex', marginBottom: 8 }}
+                style={{ display: 'flex', marginBottom: 8, width: '100%' }}
                 align="baseline"
               >
                 <Form.Item
@@ -59,6 +59,7 @@ const CostList: React.FC<CostListProps> = ({
                       message: languageData[language].missingItem,
                     },
                   ]}
+                  style={{ flex: 1 }} // 50% width
                 >
                   <Input placeholder="Item" className="koho-font" />
                 </Form.Item>
@@ -74,13 +75,14 @@ const CostList: React.FC<CostListProps> = ({
                       message: languageData[language].missingCost,
                     },
                   ]}
+                  style={{ flex: 1 }} // 50% width
                 >
                   <InputNumber
                     className="koho-font"
-                    value={0}
                     placeholder="Cost"
                     min={0}
                     inputMode="decimal" // Ensure the decimal keypad shows on mobile
+                    style={{ width: '100%' }} // Ensure full width inside flex
                   />
                 </Form.Item>
 
