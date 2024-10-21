@@ -14,6 +14,7 @@ const SummaryCalculation: React.FC<SummaryCalculationProps> = ({
   language,
 }) => {
   // Helper function to render each cost row
+  console.log(carCosts);
   const renderCostRow = (
     label: string,
     value: number | string,
@@ -22,7 +23,7 @@ const SummaryCalculation: React.FC<SummaryCalculationProps> = ({
     <div className="flex justify-between mt-2">
       <strong>{label}:</strong>
       <span>
-        {Number(value).toFixed(2)} {suffix}
+        {value} {suffix}
       </span>
     </div>
   );

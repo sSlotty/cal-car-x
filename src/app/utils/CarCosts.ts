@@ -15,12 +15,12 @@ export interface CarData {
 }
 
 export interface CostSummary {
-    downAmount: number;
-    loanAmount: number;
-    monthlyInstallment: number;
-    totalMonthlyCost: number;
-    totalYearlyCost: number;
-    totalAdditionalCost: number;
+    downAmount: number | string;
+    loanAmount: number | string;
+    monthlyInstallment: number | string;
+    totalMonthlyCost: number | string;
+    totalYearlyCost: number | string;
+    totalAdditionalCost: number | string;
 }
 
 interface ExpensesInput {
@@ -30,16 +30,28 @@ interface ExpensesInput {
 }
 
 export function calculateCarCosts(carData: CarData): CostSummary {
-    // Calculate down amount (percentage of price) and subtract discount
-    const downAmount = (carData.price * (carData.downPaymentPercentage / 100)) - carData.discount;
+    // Safely handle input values without defaulting to 0
+    const price = carData.price || 0;
+    let discount = carData.discount || 0;
+    const downPaymentPercentage = carData.downPaymentPercentage || 0;
+    const loanInterestRate = carData.loanInterestRate || 0;
+    const loanTermYears = carData.loanTermYears || 0;
 
+    // Calculate down amount (percentage of price)
+    const downAmount = price * (downPaymentPercentage / 100);
+
+    // If the discount is greater than the down payment, set discount to 0
+    discount = discount > downAmount ? 0 : discount;
     // Calculate loan amount (remaining amount after down payment)
-    const loanAmount = carData.price - downAmount;
+    const loanAmount = price - (downAmount + discount);
 
-    // Calculate total interest and monthly installment
-    const totalInterest = loanAmount * (carData.loanInterestRate / 100) * carData.loanTermYears;
+    // If the discount is greater than the loan amount, set discount to 0
+    discount = discount > loanAmount ? 0 : discount;
+
+    // Safeguard against dividing by zero by checking if loanTermYears > 0
+    const totalInterest = loanTermYears > 0 ? loanAmount * (loanInterestRate / 100) * loanTermYears : 0;
     const totalLoanAmount = loanAmount + totalInterest;
-    const monthlyInstallment = totalLoanAmount / (carData.loanTermYears * 12);
+    const monthlyInstallment = loanTermYears > 0 ? totalLoanAmount / (loanTermYears * 12) : 0;
 
     // Calculate expenses for monthly, yearly, and additional costs
     const { totalMonthlyCost, totalYearlyCost, totalAdditionalCost } = calculateExpenses({
@@ -54,28 +66,16 @@ export function calculateCarCosts(carData: CarData): CostSummary {
     // Total yearly cost (monthly * 12 + yearly costs)
     const totalYearlyCostSum = (monthlyInstallment * 12) + totalYearlyCost + (totalMonthlyCost * 12);
 
-    // Total cost over all the years (monthly * loan years + additional costs)
-    const totalAllYearsCost = (monthlyInstallment * carData.loanTermYears * 12) + totalAdditionalCost;
+    // Total cost over all the years (monthly * loan years * 12 + additional costs)
+    const totalAllYearsCost = (monthlyInstallment * loanTermYears * 12) + totalAdditionalCost;
 
     return {
-        downAmount: downAmount !== null && downAmount !== undefined && !isNaN(downAmount)
-            ? downAmount
-            : 0,
-        loanAmount: loanAmount !== null && loanAmount !== undefined && !isNaN(loanAmount)
-            ? loanAmount
-            : 0,
-        monthlyInstallment: monthlyInstallment !== null && monthlyInstallment !== undefined && !isNaN(monthlyInstallment)
-            ? monthlyInstallment
-            : 0,
-        totalMonthlyCost: totalMonthlyCostSum !== null && totalMonthlyCostSum !== undefined && !isNaN(totalMonthlyCostSum)
-            ? totalMonthlyCostSum
-            : 0,
-        totalYearlyCost: totalYearlyCostSum !== null && totalYearlyCostSum !== undefined && !isNaN(totalYearlyCostSum)
-            ? totalYearlyCostSum
-            : 0,
-        totalAdditionalCost: totalAllYearsCost !== null && totalAllYearsCost !== undefined && !isNaN(totalAllYearsCost)
-            ? totalAllYearsCost
-            : 0,
+        downAmount: isNaN(downAmount) || downAmount === Infinity ? 0 : downAmount,
+        loanAmount: isNaN(loanAmount) || loanAmount === Infinity ? 0 : loanAmount,
+        monthlyInstallment: isNaN(monthlyInstallment) || monthlyInstallment === Infinity ? 0 : monthlyInstallment,
+        totalMonthlyCost: isNaN(totalMonthlyCostSum) || totalMonthlyCostSum === Infinity ? 0 : totalMonthlyCostSum,
+        totalYearlyCost: isNaN(totalYearlyCostSum) || totalYearlyCostSum === Infinity ? 0 : totalYearlyCostSum,
+        totalAdditionalCost: isNaN(totalAllYearsCost) || totalAllYearsCost === Infinity ? 0 : totalAllYearsCost,
     };
 }
 
