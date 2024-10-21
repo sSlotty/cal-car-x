@@ -32,23 +32,15 @@ interface ExpensesInput {
 export function calculateCarCosts(carData: CarData): CostSummary {
     // Safely handle input values without defaulting to 0
     const price = carData.price || 0;
-    let discount = carData.discount || 0;
+    const discount = carData.discount || 0;
     const downPaymentPercentage = carData.downPaymentPercentage || 0;
     const loanInterestRate = carData.loanInterestRate || 0;
     const loanTermYears = carData.loanTermYears || 0;
 
     // Calculate down amount (percentage of price)
-    const downAmount = price * (downPaymentPercentage / 100);
+    const downAmount = price * (downPaymentPercentage / 100) - discount;
+    const loanAmount = price - downAmount
 
-    // If the discount is greater than the down payment, set discount to 0
-    discount = discount > downAmount ? 0 : discount;
-    // Calculate loan amount (remaining amount after down payment)
-    const loanAmount = price - (downAmount + discount);
-
-    // If the discount is greater than the loan amount, set discount to 0
-    discount = discount > loanAmount ? 0 : discount;
-
-    // Safeguard against dividing by zero by checking if loanTermYears > 0
     const totalInterest = loanTermYears > 0 ? loanAmount * (loanInterestRate / 100) * loanTermYears : 0;
     const totalLoanAmount = loanAmount + totalInterest;
     const monthlyInstallment = loanTermYears > 0 ? totalLoanAmount / (loanTermYears * 12) : 0;
