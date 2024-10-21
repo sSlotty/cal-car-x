@@ -32,7 +32,6 @@ interface ExpensesInput {
 export function calculateCarCosts(carData: CarData): CostSummary {
     // Safely handle input values without defaulting to 0
     const price = carData.price || 0;
-    const discount = carData.discount || 0;
     const downPaymentPercentage = carData.downPaymentPercentage || 0;
     const loanInterestRate = carData.loanInterestRate || 0;
     const loanTermYears = carData.loanTermYears || 0;
