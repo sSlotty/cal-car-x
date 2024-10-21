@@ -17,10 +17,10 @@ export interface CarData {
 export interface CostSummary {
     downAmount: number;
     loanAmount: number;
-    monthlyInstallment: string;
-    totalMonthlyCost: string;
-    totalYearlyCost: string;
-    totalAdditionalCost: string;
+    monthlyInstallment: number;
+    totalMonthlyCost: number;
+    totalYearlyCost: number;
+    totalAdditionalCost: number;
 }
 
 interface ExpensesInput {
@@ -60,10 +60,10 @@ export function calculateCarCosts(carData: CarData): CostSummary {
     return {
         downAmount: Math.max(downAmount, 0),
         loanAmount: Math.max(loanAmount, 0),
-        monthlyInstallment: monthlyInstallment.toFixed(2),
-        totalMonthlyCost: totalMonthlyCostSum.toFixed(2),
-        totalYearlyCost: totalYearlyCostSum.toFixed(2),
-        totalAdditionalCost: totalAllYearsCost.toFixed(2),
+        monthlyInstallment: Math.max(monthlyInstallment, 0),
+        totalMonthlyCost: Math.max(totalMonthlyCostSum, 0),
+        totalYearlyCost: Math.max(totalYearlyCostSum, 0),
+        totalAdditionalCost: Math.max(totalAllYearsCost, 0),
     };
 }
 

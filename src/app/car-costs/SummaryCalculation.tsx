@@ -22,7 +22,7 @@ const SummaryCalculation: React.FC<SummaryCalculationProps> = ({
     <div className="flex justify-between mt-2">
       <strong>{label}:</strong>
       <span>
-        {value} {suffix}
+        {Number(value).toFixed(2)} {suffix}
       </span>
     </div>
   );
@@ -41,15 +41,15 @@ const SummaryCalculation: React.FC<SummaryCalculationProps> = ({
           )}
           {renderCostRow(
             languageData[language].monthlyInstallment,
-            parseFloat(carCosts?.monthlyInstallment ?? '0').toLocaleString()
+            carCosts?.monthlyInstallment?.toLocaleString() ?? '0'
           )}
           {renderCostRow(
             languageData[language].totalMonthlyCost,
-            parseFloat(carCosts?.totalMonthlyCost ?? '0').toLocaleString()
+            carCosts?.totalMonthlyCost?.toLocaleString() ?? '0'
           )}
           {renderCostRow(
             languageData[language].totalYearlyCost,
-            parseFloat(carCosts?.totalYearlyCost ?? '0').toLocaleString()
+            carCosts?.totalYearlyCost?.toLocaleString() ?? '0'
           )}
         </Col>
       </Row>
